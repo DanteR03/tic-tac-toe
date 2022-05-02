@@ -1,25 +1,33 @@
 const gameBoard = (function () {
   let board = [null, null, null, null, null, null, null, null, null];
 
-  function addSymbol(symbol) {
+  function addSymbol(input) {
+    symbol = input;
     const cells = document.querySelectorAll(".cell");
     cells.forEach(cell => {
-      cell.removeEventListener("click", e => {
-        board[e.target.dataset.num] = symbol;
-      });
+      cell.removeEventListener("click", e => {insertSymbol(e)});
     });
     cells.forEach(cell => {
-      cell.addEventListener("click", e => {
-        board[e.target.dataset.num] = symbol;
-      });
+      cell.addEventListener("click", e => {insertSymbol(e)});
     });
-  };
+  }
 
   return {
     board: board,
     addSymbol: addSymbol,
-  }
+  };
 })();
+
+function insertSymbol(index) {
+  gameBoard.board[index.target.dataset.num] = symbol;
+  gameBoard.board[index.target.dataset.num] = symbol;
+  displayController.displayBoard();
+  if (symbol === "X") {
+    symbol = "O";
+  } else {
+    symbol = "X";
+  };
+};
 
 const displayController = (function () {
   function displayBoard() {
@@ -49,6 +57,6 @@ const displayController = (function () {
 })();
 
 const Player = (name, symbol) => {
-  return {name, symbol};
+  return { name, symbol };
 }
 
