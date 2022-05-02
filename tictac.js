@@ -5,12 +5,12 @@ const gameBoard = (function () {
     const cells = document.querySelectorAll(".cell");
     cells.forEach(cell => {
       cell.removeEventListener("click", e => {
-        _board[e.target.dataset.num] = symbol;
+        board[e.target.dataset.num] = symbol;
       });
     });
     cells.forEach(cell => {
       cell.addEventListener("click", e => {
-        _board[e.target.dataset.num] = symbol;
+        board[e.target.dataset.num] = symbol;
       });
     });
   };
