@@ -12,53 +12,24 @@ const gameBoard = (function () {
     });
   }
 
+  function insertSymbol(index) {
+    if (board[index.target.dataset.num] === null) {
+      board[index.target.dataset.num] = symbol;
+      displayController.displayBoard();
+      game.checkVictory();
+      if (symbol === "X") {
+        symbol = "O";
+      } else {
+        symbol = "X";
+      };
+    };
+  };
+
   return {
     board: board,
     addSymbol: addSymbol,
   };
 })();
-
-function insertSymbol(index) {
-  if (gameBoard.board[index.target.dataset.num] === null) {
-    gameBoard.board[index.target.dataset.num] = symbol;
-    gameBoard.board[index.target.dataset.num] = symbol;
-    displayController.displayBoard();
-    checkVictory();
-    if (symbol === "X") {
-      symbol = "O";
-    } else {
-      symbol = "X";
-    };
-  };
-};
-
-function checkVictory() {
-  let condition1 = [];
-  condition1.push(gameBoard.board[0], gameBoard.board[1], gameBoard.board[2]);
-  let condition2 = [];
-  condition2.push(gameBoard.board[3], gameBoard.board[4], gameBoard.board[5]);
-  let condition3 = [];
-  condition3.push(gameBoard.board[6], gameBoard.board[7], gameBoard.board[8]);
-  let condition4 = [];
-  condition4.push(gameBoard.board[0], gameBoard.board[3], gameBoard.board[6]);
-  let condition5 = [];
-  condition5.push(gameBoard.board[1], gameBoard.board[4], gameBoard.board[7]);
-  let condition6 = [];
-  condition6.push(gameBoard.board[2], gameBoard.board[5], gameBoard.board[8]);
-  let condition7 = [];
-  condition7.push(gameBoard.board[0], gameBoard.board[4], gameBoard.board[8]);
-  let condition8 = [];
-  condition8.push(gameBoard.board[2], gameBoard.board[4], gameBoard.board[6]);
-  let conditions = []
-  conditions.push(condition1, condition2, condition3, condition4, condition5, condition6, condition7, condition8);
-  conditions.forEach((condition) => {
-    if (condition.every(symbol => symbol === "X") === true) {
-      alert("Player 1 wins!")
-    } else if (condition.every(symbol => symbol === "O") === true) {
-      alert("Player 2 wins!")
-    };
-  })
-}
 
 const displayController = (function () {
   function displayBoard() {
@@ -91,3 +62,41 @@ const Player = (name, symbol) => {
   return { name, symbol };
 }
 
+const game = (function() {
+  const player1 = Player(prompt("Your name?"), prompt("Your symbol?"));
+
+  const player2 = Player(prompt("Your name?"), prompt("Your symbol?"));
+
+  gameBoard.addSymbol("X");
+
+  function checkVictory() {
+    let condition1 = [];
+    condition1.push(gameBoard.board[0], gameBoard.board[1], gameBoard.board[2]);
+    let condition2 = [];
+    condition2.push(gameBoard.board[3], gameBoard.board[4], gameBoard.board[5]);
+    let condition3 = [];
+    condition3.push(gameBoard.board[6], gameBoard.board[7], gameBoard.board[8]);
+    let condition4 = [];
+    condition4.push(gameBoard.board[0], gameBoard.board[3], gameBoard.board[6]);
+    let condition5 = [];
+    condition5.push(gameBoard.board[1], gameBoard.board[4], gameBoard.board[7]);
+    let condition6 = [];
+    condition6.push(gameBoard.board[2], gameBoard.board[5], gameBoard.board[8]);
+    let condition7 = [];
+    condition7.push(gameBoard.board[0], gameBoard.board[4], gameBoard.board[8]);
+    let condition8 = [];
+    condition8.push(gameBoard.board[2], gameBoard.board[4], gameBoard.board[6]);
+    let conditions = []
+    conditions.push(condition1, condition2, condition3, condition4, condition5, condition6, condition7, condition8);
+    conditions.forEach((condition) => {
+      if (condition.every(symbol => symbol === player1.symbol) === true) {
+        alert(`${player1.name} wins!`)
+      } else if (condition.every(symbol => symbol === player2.symbol) === true) {
+        alert(`${player2.name} wins!`)
+      };
+    });
+  };
+  return {
+    checkVictory: checkVictory
+  }
+})();
