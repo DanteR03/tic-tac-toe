@@ -8,4 +8,17 @@ const gameBoard = (function () {
         return board
     };
     return { getBoard }
-})()
+})();
+
+function createPlayer (name, marker) {
+    const playerName = name;
+    const playerMarker = marker;
+
+    function getName () {
+        return playerName;
+    };
+    function getMarker () {
+        return playerMarker;
+    };
+    return { getName, getMarker };
+}
