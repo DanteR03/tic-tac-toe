@@ -4,10 +4,16 @@ const gameBoard = (function () {
         null, null, null,
         null, null, null
     ];
+
     function getBoard () {
         return board
     };
-    return { getBoard }
+
+    function addMark (index, mark) {
+        board[index] = mark;
+    }
+
+    return { getBoard, addMark };
 })();
 
 function createPlayer (name, marker) {
