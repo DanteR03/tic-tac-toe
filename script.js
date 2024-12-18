@@ -11,7 +11,7 @@ const gameBoard = (function () {
 
     function addMark (index, mark) {
         board[index] = mark;
-    }
+    };
 
     return { getBoard, addMark };
 })();
@@ -23,9 +23,11 @@ function createPlayer (name, marker) {
     function getName () {
         return playerName;
     };
+
     function getMarker () {
         return playerMarker;
     };
+
     return { getName, getMarker };
 }
 
@@ -41,6 +43,7 @@ const game = (function () {
         [0, 4, 8],
         [2, 4, 6]
     ];
+
     function checkWinner () {
         winningCombos.forEach((combo) => {
             let [a, b, c] = combo;
@@ -52,5 +55,14 @@ const game = (function () {
             }
         })
     };
-    return { checkWinner };
+
+    function changeCurrentPlayer () {
+        currentPlayer === "X" ? currentPlayer = "O" : currentPlayer = "X";
+    };
+
+    function getCurrentPlayer () {
+        return currentPlayer;
+    };
+
+    return { checkWinner, changeCurrentPlayer, getCurrentPlayer };
 })();
