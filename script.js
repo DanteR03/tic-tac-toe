@@ -19,6 +19,7 @@ const gameBoard = (function () {
 function createPlayer (name, marker) {
     const playerName = name;
     const playerMarker = marker;
+    let playerScore = 0;
 
     function getName () {
         return playerName;
@@ -28,11 +29,22 @@ function createPlayer (name, marker) {
         return playerMarker;
     };
 
-    return { getName, getMarker };
+    function increaseScore () {
+        playerScore++;
+    }
+
+    function getScore () {
+        return playerScore;
+    }
+
+    return { getName, getMarker, increaseScore, getScore };
 }
 
 const game = (function () {
-    let currentPlayer = "X";
+    let currentPlayer;
+    let currentPlayerMarker;
+    let player1;
+    let player2;
     const winningCombos = [
         [0, 1, 2],
         [3, 4, 5],
@@ -57,12 +69,20 @@ const game = (function () {
     };
 
     function changeCurrentPlayer () {
-        currentPlayer === "X" ? currentPlayer = "O" : currentPlayer = "X";
+        currentPlayer === player1 ? currentPlayer = player2 : currentPlayer = player1;
+        currentPlayerMarker = currentPlayer.getMarker;
     };
 
     function getCurrentPlayer () {
         return currentPlayer;
     };
 
-    return { checkWinner, changeCurrentPlayer, getCurrentPlayer };
+    function initializeGame () {
+        player1 = undefined;
+        player2 = undefined;
+        player1 = createPlayer(prompt("Player 1 name?"), "X");
+        player2 = createPlayer(prompt("Player 2 name?"), "O");
+    }
+
+    return { checkWinner, changeCurrentPlayer, getCurrentPlayer, initializeGame };
 })();
