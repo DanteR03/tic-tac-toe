@@ -13,20 +13,28 @@ const gameBoard = (function () {
         board[index] = mark;
     };
 
-    return { getBoard, addMark };
+    function clearBoard () {
+        board = [
+          null, null, null,
+          null, null, null,
+          null, null, null
+        ];
+    };
+
+    return { getBoard, addMark, clearBoard };
 })();
 
-function createPlayer (name, marker) {
+function createPlayer (name, mark) {
     const playerName = name;
-    const playerMarker = marker;
+    const playerMark = mark;
     let playerScore = 0;
 
     function getName () {
         return playerName;
     };
 
-    function getMarker () {
-        return playerMarker;
+    function getMark () {
+        return playerMark;
     };
 
     function increaseScore () {
@@ -37,12 +45,12 @@ function createPlayer (name, marker) {
         return playerScore;
     }
 
-    return { getName, getMarker, increaseScore, getScore };
+    return { getName, getMark, increaseScore, getScore };
 }
 
 const game = (function () {
     let currentPlayer;
-    let currentPlayerMarker;
+    let currentPlayerMark;
     let player1;
     let player2;
     const winningCombos = [
@@ -57,24 +65,20 @@ const game = (function () {
     ];
 
     function checkWinner () {
+        let winner = false;
         winningCombos.forEach((combo) => {
             let [a, b, c] = combo;
             let board = gameBoard.getBoard();
-            if (board[a] === currentPlayer && board[a] === board[b] && board[a] === board[c]) {
-                console.log("WINNER");
-            } else {
-                console.log("LOSER");
+            if (board[a] === currentPlayerMark && board[a] === board[b] && board[a] === board[c]) {
+                winner = true;
             }
         })
+        return winner;
     };
 
     function changeCurrentPlayer () {
         currentPlayer === player1 ? currentPlayer = player2 : currentPlayer = player1;
-        currentPlayerMarker = currentPlayer.getMarker;
-    };
-
-    function getCurrentPlayer () {
-        return currentPlayer;
+        currentPlayerMark = currentPlayer.getMark();
     };
 
     function initializeGame () {
@@ -82,7 +86,20 @@ const game = (function () {
         player2 = undefined;
         player1 = createPlayer(prompt("Player 1 name?"), "X");
         player2 = createPlayer(prompt("Player 2 name?"), "O");
+        changeCurrentPlayer();
     }
 
-    return { checkWinner, changeCurrentPlayer, getCurrentPlayer, initializeGame };
+    function playRound (index) {
+        console.log(index, currentPlayerMark);
+        gameBoard.addMark(index, currentPlayerMark);
+        if (checkWinner() === true) {
+            console.log(`${currentPlayer.getName()} wins!`);
+            currentPlayer.increaseScore();
+            gameBoard.clearBoard();
+        } else {
+            changeCurrentPlayer ();
+        }
+    }
+
+    return { initializeGame, playRound };
 })();
