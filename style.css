@@ -1,0 +1,94 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --system-ui: font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+body {
+    min-height: 100vh;
+    font-family: var(--system-ui);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #f3f4f6;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4rem;
+}
+
+.cell-middle {
+    border: 2px solid black;
+}
+
+.cell-upper-middle,
+.cell-lower-middle {
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+}
+
+.cell-middle-left,
+.cell-middle-right {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+.main-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex: 2;
+}
+
+.board-container {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.buttons-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 1.5rem;
+}
+
+.player-container {
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.playername-input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+input {
+    outline: none;
+}
+
+button {
+    width: 300px;
+    height: 50px;
+    font-size: 2rem;
+}
