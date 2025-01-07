@@ -21,7 +21,15 @@ const gameBoard = (function () {
         ];
     };
 
-    return { getBoard, addMark, clearBoard };
+    function checkMarkInBoard (index) {
+        if (board[index] !== null) {
+            return false;
+        }  else {
+            return true;
+        }
+    }
+
+    return { getBoard, addMark, clearBoard, checkMarkInBoard };
 })();
 
 function createPlayer (name, mark) {
@@ -81,17 +89,17 @@ const game = (function () {
         currentPlayerMark = currentPlayer.getMark();
     };
 
-    function initializeGame () {
+    function initializeGame (name1, name2) {
         player1 = undefined;
         player2 = undefined;
-        player1 = createPlayer(prompt("Player 1 name?"), "X");
-        player2 = createPlayer(prompt("Player 2 name?"), "O");
+        player1 = createPlayer(name1, "X");
+        player2 = createPlayer(name2, "O");
         changeCurrentPlayer();
     }
 
     function playRound (index) {
-        console.log(index, currentPlayerMark);
-        gameBoard.addMark(index, currentPlayerMark);
+        if (gameBoard.checkMarkInBoard(index) === true) {
+            gameBoard.addMark(index, currentPlayerMark);
         if (checkWinner() === true) {
             console.log(`${currentPlayer.getName()} wins!`);
             currentPlayer.increaseScore();
@@ -99,18 +107,20 @@ const game = (function () {
         } else {
             changeCurrentPlayer ();
         }
+        }
     }
 
     return { initializeGame, playRound };
 })();
 
 const displayController = (function (){
-    const gameBoardContainer = document.querySelector(".board-container");
     const gameBoardCells = document.querySelectorAll(".cell");
     
     function addMoveListener () {
+        const gameBoardContainer = document.querySelector(".board-container");
         gameBoardContainer.addEventListener("click", function(e) {
         game.playRound(e.target.dataset.index);
+        renderGameBoard();
     })
 };
 
@@ -119,7 +129,58 @@ const displayController = (function (){
         gameBoardCells.forEach((cell) => {
             cell.textContent = gameBoardContent[cell.dataset.index];
         });
+    };
+
+    function readNames () {
+        const playerOneNameInput = document.querySelector("#player1")
+        const playerTwoNameInput = document.querySelector("#player2")
+        const playerOneName = playerOneNameInput.value || "Player 1";
+        const playerTwoName = playerTwoNameInput.value || "Player 2";
+        return [playerOneName, playerTwoName];
     }
 
-    return { addMoveListener, renderGameBoard }
+    function addStartButtonListener () {
+        const startButton = document.querySelector(".start-button")
+        startButton.addEventListener("click", function() {
+            const names = readNames();
+            game.initializeGame(names[0], names[1]);
+            addMoveListener();
+            changeButtons();
+        });
+    };
+
+    function changeButtons () {
+        const startButton = document.querySelector(".start-button")
+        const resetButton = document.querySelector(".reset-button")
+        const restartButton = document.querySelector(".restart-button")
+        const inputs = document.querySelectorAll(".playername-input");
+        let status = "start";
+
+        if (status === "start") {
+            startButton.classList.add("hidden");
+            resetButton.classList.remove("hidden");
+            restartButton.classList.remove("hidden");
+            inputs.forEach((input) => {
+                input.classList.add("hidden");
+            })
+        }
+        else {
+            startButton.classList.remove("hidden");
+            resetButton.classList.add("hidden");
+            restartButton.classList.add("hidden");
+            inputs.forEach((input) => {
+                input.classList.remove("hidden");
+            })
+        }
+    }
+
+    function addResetButtonListener () {
+        const resetButton = document.querySelector(".reset-button")
+        resetButton.addEventListener("click", function () {
+            gameBoard.clearBoard();
+            renderGameBoard();
+        })
+    }
+
+    return { addStartButtonListener, addResetButtonListener }
 })();
