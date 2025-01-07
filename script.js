@@ -1,5 +1,5 @@
 const gameBoard = (function () {
-    const board = [
+    let board = [
         null, null, null,
         null, null, null,
         null, null, null
@@ -102,4 +102,24 @@ const game = (function () {
     }
 
     return { initializeGame, playRound };
+})();
+
+const displayController = (function (){
+    const gameBoardContainer = document.querySelector(".board-container");
+    const gameBoardCells = document.querySelectorAll(".cell");
+    
+    function addMoveListener () {
+        gameBoardContainer.addEventListener("click", function(e) {
+        game.playRound(e.target.dataset.index);
+    })
+};
+
+    function renderGameBoard () {
+        const gameBoardContent = gameBoard.getBoard();
+        gameBoardCells.forEach((cell) => {
+            cell.textContent = gameBoardContent[cell.dataset.index];
+        });
+    }
+
+    return { addMoveListener, renderGameBoard }
 })();
