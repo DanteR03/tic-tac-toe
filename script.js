@@ -90,37 +90,47 @@ const game = (function () {
     };
 
     function initializeGame (name1, name2) {
-        player1 = undefined;
-        player2 = undefined;
         player1 = createPlayer(name1, "X");
         player2 = createPlayer(name2, "O");
         changeCurrentPlayer();
+    }
+
+    function resetGame () {
+        player1 = undefined;
+        player2 = undefined;
+        currentPlayer = undefined;
+        currentPlayerMark = undefined;
+        gameBoard.clearBoard();
     }
 
     function playRound (index) {
         if (gameBoard.checkMarkInBoard(index) === true) {
             gameBoard.addMark(index, currentPlayerMark);
         if (checkWinner() === true) {
-            console.log(`${currentPlayer.getName()} wins!`);
             currentPlayer.increaseScore();
-            gameBoard.clearBoard();
         } else {
             changeCurrentPlayer ();
         }
         }
     }
 
-    return { initializeGame, playRound };
+    function getPlayers () {
+        return [player1, player2]
+    }
+
+    return { initializeGame, playRound, resetGame, getPlayers };
 })();
 
 const displayController = (function (){
     const gameBoardCells = document.querySelectorAll(".cell");
+    let status = "start";
     
     function addMoveListener () {
         const gameBoardContainer = document.querySelector(".board-container");
         gameBoardContainer.addEventListener("click", function(e) {
         game.playRound(e.target.dataset.index);
         renderGameBoard();
+        displayVariables();
     })
 };
 
@@ -146,6 +156,7 @@ const displayController = (function (){
             game.initializeGame(names[0], names[1]);
             addMoveListener();
             changeButtons();
+            displayVariables();
         });
     };
 
@@ -154,7 +165,6 @@ const displayController = (function (){
         const resetButton = document.querySelector(".reset-button")
         const restartButton = document.querySelector(".restart-button")
         const inputs = document.querySelectorAll(".playername-input");
-        let status = "start";
 
         if (status === "start") {
             startButton.classList.add("hidden");
@@ -163,6 +173,7 @@ const displayController = (function (){
             inputs.forEach((input) => {
                 input.classList.add("hidden");
             })
+            status = "reset";
         }
         else {
             startButton.classList.remove("hidden");
@@ -171,6 +182,7 @@ const displayController = (function (){
             inputs.forEach((input) => {
                 input.classList.remove("hidden");
             })
+            status = "start";
         }
     }
 
@@ -182,5 +194,30 @@ const displayController = (function (){
         })
     }
 
-    return { addStartButtonListener, addResetButtonListener }
+    function addRestartButtonListener () {
+        const restartButton = document.querySelector(".restart-button")
+        restartButton.addEventListener("click", function () {
+            game.resetGame();
+            renderGameBoard();
+            changeButtons();
+        })
+    }
+
+    function displayVariables () {
+        let players = game.getPlayers();
+        const playerOneNameDisplay = document.querySelector(".player-one-name");
+        const playerTwoNameDisplay = document.querySelector(".player-two-name");
+        const playerOneScoreDisplay = document.querySelector(".player-one-score");
+        const playerTwoScoreDisplay = document.querySelector(".player-two-score");
+        playerOneNameDisplay.textContent = players[0].getName();
+        playerTwoNameDisplay.textContent = players[1].getName();
+        playerOneScoreDisplay.textContent = players[0].getScore();
+        playerTwoScoreDisplay.textContent = players[1].getScore();
+    }
+
+    return { addStartButtonListener, addResetButtonListener, addRestartButtonListener }
 })();
+
+displayController.addStartButtonListener();
+displayController.addResetButtonListener();
+displayController.addRestartButtonListener();
